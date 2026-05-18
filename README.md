@@ -11,15 +11,39 @@ Two slash commands:
 
 ## Install
 
-In Claude Code, run:
+> **The `/plugin` command only works in the standalone Claude Code CLI.** If you're inside the VS Code extension, open a terminal and run `claude` first, or use the [manual install](#manual-install-no-plugin-command) below.
+
+In the standalone CLI, register the marketplace and install the plugin:
 
 ```
-/plugin install dawnn07/obsidian-resume
+/plugin marketplace add dawnn07/obsidian-resume
+/plugin install obsidian-resume@obsidian-resume
 ```
 
-> Replace `dawnn07/obsidian-resume` with your fork if you've forked it.
+After install, both `/generate-resume` and `/find-jobs` appear in your slash-command menu.
 
-That's it. Both `/generate-resume` and `/find-jobs` will appear in your slash-command menu.
+To install your own fork, replace `dawnn07/obsidian-resume` with `<your-handle>/<your-repo>`.
+
+### Manual install (no `/plugin` command)
+
+If `/plugin` isn't available in your environment, you can wire the commands up directly:
+
+```bash
+# 1. Clone the repo somewhere stable
+git clone https://github.com/dawnn07/obsidian-resume.git ~/.local/share/obsidian-resume
+
+# 2. Symlink the slash commands into your user commands folder
+mkdir -p ~/.claude/commands
+ln -sf ~/.local/share/obsidian-resume/commands/generate-resume.md ~/.claude/commands/generate-resume.md
+ln -sf ~/.local/share/obsidian-resume/commands/find-jobs.md       ~/.claude/commands/find-jobs.md
+
+# 3. Replace ${CLAUDE_PLUGIN_ROOT} with the absolute repo path
+sed -i 's|\${CLAUDE_PLUGIN_ROOT}|'"$HOME/.local/share/obsidian-resume"'|g' \
+  ~/.claude/commands/generate-resume.md \
+  ~/.claude/commands/find-jobs.md
+```
+
+Restart Claude Code and `/generate-resume` and `/find-jobs` will appear.
 
 ---
 

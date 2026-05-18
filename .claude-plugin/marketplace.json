@@ -1,0 +1,14 @@
+{
+  "name": "obsidian-resume",
+  "owner": {
+    "name": "dawnn07",
+    "email": "haidangdavid123@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "obsidian-resume",
+      "source": "./",
+      "description": "Generate Harvard OCS-style LaTeX resumes from Obsidian vault notes, then search live job listings matching the profile. Provides /generate-resume and /find-jobs slash commands."
+    }
+  ]
+}
