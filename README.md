@@ -27,7 +27,7 @@ That's it. Both `/generate-resume` and `/find-jobs` will appear in your slash-co
 
 ### 1. Generate the resume
 
-Just point `/generate-resume` at your vault folder — no export step needed:
+Just point `/generate-resume` at your vault folder:
 
 ```
 /generate-resume ~/path/to/your/ObsidianVault
@@ -35,8 +35,8 @@ Just point `/generate-resume` at your vault folder — no export step needed:
 
 Claude will:
 
-1. Discover career-relevant notes inside the vault (by folder name or by `#career` / `#resume` / `#job` / `#experience` / etc. tags)
-2. Parse the notes into a structured profile
+1. Run the bundled `export_vault.py` to scan the vault and pull out career-tagged notes (you'll be asked to approve the Bash call once)
+2. Parse the resulting JSON into a structured profile
 3. Generate a complete Harvard OCS LaTeX file
 4. Save it to `./resume.tex` (or a path you choose)
 5. Print compile instructions
@@ -50,7 +50,7 @@ pdflatex resume.tex   # run twice for spacing
 
 `/generate-resume` also accepts:
 
-- A pre-exported `obsidian_export.json` file (see [optional pre-export](#optional-pre-export-for-huge-vaults) below)
+- A pre-exported `obsidian_export.json` file (skips the export step)
 - A single `.md` file with raw notes
 - No argument — it'll ask you for a path or pasted content
 
@@ -64,16 +64,16 @@ Claude extracts your top skills, roles, location and seniority, runs three live 
 
 ---
 
-## Optional: pre-export for huge vaults
+## Optional: run the export script manually
 
-If your vault has thousands of notes and reading them inline would burn through context, you can pre-filter into a single JSON file using the included script:
+`/generate-resume` runs the bundled `export_vault.py` for you. You only need to run it by hand if you want to inspect the JSON, cache an export across sessions, or use it from a non-Claude tool:
 
 ```bash
 python ~/.claude/plugins/obsidian-resume/skills/obsidian-resume/scripts/export_vault.py \
   --vault ~/path/to/your/ObsidianVault
 ```
 
-This produces `obsidian_export.json` in the same folder. The script collects notes that:
+This produces `obsidian_export.json` in the script's folder. The script collects notes that:
 
 - Have a tag in `{career, resume, job, work, experience, skills, education, projects, cv}`
 - OR live inside a folder named `Career`, `Job`, `Resume`, `CV`, `Work`, `Experience`, or `Portfolio`
@@ -83,8 +83,6 @@ Pass `--all` to export every note, or `--tag mytag` to filter by a specific tag.
 ```
 /generate-resume /absolute/path/to/obsidian_export.json
 ```
-
-For typical vaults (a few hundred career-tagged notes or fewer), you don't need this step.
 
 ---
 

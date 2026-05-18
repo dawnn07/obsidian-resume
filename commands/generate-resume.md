@@ -18,7 +18,7 @@ Follow these steps in order. Do not skip steps.
 
 The user may have passed input as `$ARGUMENTS`. Resolve it like this:
 
-1. **If `$ARGUMENTS` is a directory** → it's an Obsidian vault. Discover career notes inline (see Step 1a below). **This is the recommended path — no Python script needed.**
+1. **If `$ARGUMENTS` is a directory** → it's an Obsidian vault. Run the export script on it (see Step 1a below). **This is the recommended path.**
 2. **If `$ARGUMENTS` is a `.json` file** → read it with the Read tool. This is a pre-exported `obsidian_export.json`.
 3. **If `$ARGUMENTS` is a `.md` file** → read it. Treat as raw resume notes.
 4. **If `$ARGUMENTS` is empty** → ask the user:
@@ -30,30 +30,42 @@ Do not proceed until you have actual content.
 
 ---
 
-## Step 1a — Vault discovery (when input is a folder)
+## Step 1a — Run the export script (when input is a folder)
 
-When the user passes a vault path, walk it yourself with these tools — do not ask them to run the Python export script.
+When the user passes a vault path, invoke the bundled Python exporter via the Bash tool — do not reimplement the parsing inline.
 
-**Discovery procedure:**
+```bash
+OUT="$(mktemp -t obsidian_export.XXXXXX.json)"
+python3 "${CLAUDE_PLUGIN_ROOT}/skills/obsidian-resume/scripts/export_vault.py" \
+  --vault "$ARGUMENTS" \
+  --out "$OUT"
+echo "$OUT"
+```
 
-1. **Find candidate files:** Use Glob with pattern `**/*.md` inside the vault path. Exclude anything under `.obsidian/`, `.trash/`, or any directory starting with `.`.
+Then read the JSON file at the path printed by `echo`. The script handles:
 
-2. **Filter by relevance.** Keep a note if ANY of these is true:
-   - It lives inside a folder named (case-insensitive): `Career`, `Job`, `Resume`, `CV`, `Work`, `Experience`, `Portfolio`, `About Me`, or `Nghề nghiệp`
-   - It contains one of these tags (frontmatter `tags:` array OR inline `#tag`): `career`, `resume`, `job`, `work`, `experience`, `skills`, `education`, `projects`, `cv`, `portfolio`
+- Walking the vault and skipping `.obsidian/`, `.trash/`, and other dot-directories
+- Filtering for career-tagged notes (`#career`, `#resume`, `#job`, `#experience`, etc.)
+  or career-named folders (`Career`, `Job`, `Resume`, `CV`, `Work`, `Experience`, `Portfolio`, ...)
+- Parsing YAML frontmatter, inline tags, and Dataview `key:: value` fields
+- Producing the JSON schema documented in `references/export_schema.md`
 
-   Use Grep with pattern `#(career|resume|job|work|experience|skills|education|projects|cv|portfolio)\b` over the vault to find tagged notes fast, then merge with the folder-based matches.
+**If the script fails:**
 
-3. **Cap the read set.** If filtering yields more than 50 files, ask the user which subfolders to include before reading everything — context budget matters.
+- `python3: command not found` → tell the user they need Python 3 installed and stop.
+- `Vault not found` → the path was wrong; ask the user for the correct path.
+- Anything else → show the user the error and stop.
 
-4. **Read the surviving files** with the Read tool, then parse each into the schema below.
+**If the script returns zero notes:**
 
-**Parsing each file** (same rules as `references/export_schema.md`):
+Re-run with `--all` to include every `.md` file, or ask the user which folder/tag to scope to:
 
-- Strip the YAML frontmatter from the top (delimited by `---` ... `---`) and parse it as key-value pairs. Lists in `[a, b]` form become arrays.
-- Collect inline tags via `#tagname` regex from the body.
-- Collect Dataview fields: lines matching `^([A-Za-z_][A-Za-z0-9_ ]*)::\s*(.+)$`.
-- The remaining markdown is the note body. Headings, bullet lists, and prose are all consumed in Step 3.
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/skills/obsidian-resume/scripts/export_vault.py" \
+  --vault "$ARGUMENTS" --all --out "$OUT"
+```
+
+**Once you have the JSON, read it with the Read tool and proceed to Step 3.**
 
 ---
 
