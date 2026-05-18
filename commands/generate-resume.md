@@ -48,20 +48,12 @@ When the user passes a vault path, walk it yourself with these tools — do not 
 
 4. **Read the surviving files** with the Read tool, then parse each into the schema below.
 
-**Parsing each file** (same rules as `scripts/export_vault.py` and `references/export_schema.md`):
+**Parsing each file** (same rules as `references/export_schema.md`):
 
 - Strip the YAML frontmatter from the top (delimited by `---` ... `---`) and parse it as key-value pairs. Lists in `[a, b]` form become arrays.
 - Collect inline tags via `#tagname` regex from the body.
 - Collect Dataview fields: lines matching `^([A-Za-z_][A-Za-z0-9_ ]*)::\s*(.+)$`.
 - The remaining markdown is the note body. Headings, bullet lists, and prose are all consumed in Step 3.
-
-**Large-vault fallback.** If the user explicitly says their vault is huge or context is tight, suggest the Python script as an optional pre-filter:
-
-```bash
-python ${CLAUDE_PLUGIN_ROOT}/skills/obsidian-resume/scripts/export_vault.py --vault <path>
-```
-
-But this is a fallback, not the default flow.
 
 ---
 
