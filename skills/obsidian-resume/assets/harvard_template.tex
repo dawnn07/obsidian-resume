@@ -1,0 +1,82 @@
+% ============================================================
+%  Harvard-Style Resume Template
+%  Compatible with: pdflatex, xelatex, lualatex
+% ============================================================
+\documentclass[10pt, letterpaper]{article}
+
+% --- Packages ---
+\usepackage[
+  top=0.5in, bottom=0.5in,
+  left=0.75in, right=0.75in
+]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fontawesome5}
+\usepackage{titlesec}
+\usepackage{multicol}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
+% --- Colors ---
+\definecolor{harvardcrimson}{RGB}{165, 28, 48}
+\definecolor{darkgray}{RGB}{60, 60, 60}
+\definecolor{medgray}{RGB}{120, 120, 120}
+
+% --- Hyperlink style ---
+\hypersetup{
+  colorlinks=true,
+  urlcolor=harvardcrimson,
+  linkcolor=harvardcrimson
+}
+
+% --- Section formatting (Harvard style: ALL CAPS + crimson rule) ---
+\titleformat{\section}
+  {\large\bfseries\color{darkgray}\uppercase}
+  {}{0em}{}
+  [\color{harvardcrimson}\titlerule]
+\titlespacing{\section}{0pt}{8pt}{4pt}
+
+% --- No page numbers ---
+\pagestyle{empty}
+
+% --- List settings ---
+\setlist[itemize]{
+  leftmargin=1.5em,
+  topsep=1pt,
+  itemsep=0pt,
+  parsep=0pt
+}
+
+% ============================================================
+%  HELPER COMMANDS
+% ============================================================
+
+% Header name
+\newcommand{\resumename}[1]{%
+  {\Huge\bfseries\color{darkgray} #1}%
+}
+
+% Contact line
+\newcommand{\contactline}[1]{%
+  \small\color{medgray} #1%
+}
+
+% Job entry: \jobentry{Title}{Company}{Location}{Dates}
+\newcommand{\jobentry}[4]{%
+  \vspace{4pt}
+  \noindent
+  \begin{tabular*}{\textwidth}{@{}l@{\extracolsep{\fill}}r@{}}
+    \textbf{#1} \textit{at} \textbf{#2} & \textcolor{medgray}{\small #4} \\
+    \textit{\small #3} & \\
+  \end{tabular*}
+  \vspace{-2pt}
+}
+
+% Education entry: \eduentry{Degree}{School}{Location}{Dates}
+\newcommand{\eduentry}[4]{%
+  \vspace{4pt}
+  \noindent
+  \begin{tabular*}{\textwidth}{@{}l@{\extracolsep{\fill}}r@{}}
+    \textbf{#2
