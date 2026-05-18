@@ -25,9 +25,48 @@ That's it. Both `/generate-resume` and `/find-jobs` will appear in your slash-co
 
 ## Quick start
 
-### 1. Export your Obsidian vault
+### 1. Generate the resume
 
-The plugin includes a small Python script that scans your vault for career-tagged notes and writes them to JSON. Run it on your local machine:
+Just point `/generate-resume` at your vault folder — no export step needed:
+
+```
+/generate-resume ~/path/to/your/ObsidianVault
+```
+
+Claude will:
+
+1. Discover career-relevant notes inside the vault (by folder name or by `#career` / `#resume` / `#job` / `#experience` / etc. tags)
+2. Parse the notes into a structured profile
+3. Generate a complete Harvard OCS LaTeX file
+4. Save it to `./resume.tex` (or a path you choose)
+5. Print compile instructions
+
+Compile:
+
+```bash
+pdflatex resume.tex
+pdflatex resume.tex   # run twice for spacing
+```
+
+`/generate-resume` also accepts:
+
+- A pre-exported `obsidian_export.json` file (see [optional pre-export](#optional-pre-export-for-huge-vaults) below)
+- A single `.md` file with raw notes
+- No argument — it'll ask you for a path or pasted content
+
+### 2. Find matching jobs
+
+```
+/find-jobs ./resume.tex
+```
+
+Claude extracts your top skills, roles, location and seniority, runs three live web searches, and presents a table of real listings with a one-line "why this matches" for each. Pick a row and Claude will write a tailored cover letter.
+
+---
+
+## Optional: pre-export for huge vaults
+
+If your vault has thousands of notes and reading them inline would burn through context, you can pre-filter into a single JSON file using the included script:
 
 ```bash
 python ~/.claude/plugins/obsidian-resume/skills/obsidian-resume/scripts/export_vault.py \
@@ -39,37 +78,13 @@ This produces `obsidian_export.json` in the same folder. The script collects not
 - Have a tag in `{career, resume, job, work, experience, skills, education, projects, cv}`
 - OR live inside a folder named `Career`, `Job`, `Resume`, `CV`, `Work`, `Experience`, or `Portfolio`
 
-Pass `--all` to export every note, or `--tag mytag` to filter by a specific tag.
-
-### 2. Generate the resume
-
-In Claude Code:
+Pass `--all` to export every note, or `--tag mytag` to filter by a specific tag. Then run:
 
 ```
 /generate-resume /absolute/path/to/obsidian_export.json
 ```
 
-Or call `/generate-resume` with no argument and paste the JSON when prompted. Claude will:
-
-1. Parse the export into a structured profile
-2. Generate a complete Harvard OCS LaTeX file
-3. Save it to `./resume.tex` (or a path you choose)
-4. Print compile instructions
-
-Compile:
-
-```bash
-pdflatex resume.tex
-pdflatex resume.tex   # run twice for spacing
-```
-
-### 3. Find matching jobs
-
-```
-/find-jobs ./resume.tex
-```
-
-Claude extracts your top skills, roles, location and seniority, runs three live web searches, and presents a table of real listings with a one-line "why this matches" for each. Pick a row and Claude will write a tailored cover letter.
+For typical vaults (a few hundred career-tagged notes or fewer), you don't need this step.
 
 ---
 
