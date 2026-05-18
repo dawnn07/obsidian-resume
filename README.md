@@ -14,10 +14,10 @@ Two slash commands:
 In Claude Code, run:
 
 ```
-/plugin install haidangdavid/obsidian-resume
+/plugin install dawnn07/obsidian-resume
 ```
 
-> Replace `haidangdavid/obsidian-resume` with your fork if you've forked it.
+> Replace `dawnn07/obsidian-resume` with your fork if you've forked it.
 
 That's it. Both `/generate-resume` and `/find-jobs` will appear in your slash-command menu.
 
@@ -78,6 +78,7 @@ Claude extracts your top skills, roles, location and seniority, runs three live 
 Any of these patterns in your Obsidian vault are recognized:
 
 **Frontmatter:**
+
 ```markdown
 ---
 tags: [career, experience]
@@ -92,15 +93,18 @@ location: Ho Chi Minh City
 ```
 
 **Heading-based sections:**
+
 ```markdown
 # Experience
 
 ## Senior Engineer at Startup XYZ (2022–2024)
+
 - Built APIs used by 50k users
 - Led CI/CD migration
 ```
 
 **Dataview fields:**
+
 ```markdown
 company:: Startup XYZ
 role:: Senior Full Stack Engineer

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Generate a Harvard OCS-style LaTeX resume from Obsidian vault notes, then search live job listings that match the profile. Includes /generate-resume and /find-jobs slash commands plus an auto-triggering skill.",
   "author": {
-    "name": "haidangdavid",
+    "name": "dawnn07",
     "email": "haidangdavid123@gmail.com"
   },
   "keywords": [
